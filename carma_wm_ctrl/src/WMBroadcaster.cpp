@@ -707,7 +707,8 @@ void WMBroadcaster::addGeofence(std::shared_ptr<Geofence> gf_ptr)
   autoware_lanelet2_msgs::MapBin gf_msg;
   auto send_data = std::make_shared<carma_wm::TrafficControl>(carma_wm::TrafficControl(gf_ptr->id_, gf_ptr->update_list_, gf_ptr->remove_list_));
   carma_wm::toBinMsg(send_data, &gf_msg);
-  gf_msg.invalidates_route=gf_ptr->invalidate_route_; 
+  gf_msg.invalidates_route=gf_ptr->invalidate_route_;
+  map_changed_since_last_update_ = true;
   gf_msg.map_version = current_map_version_;
   map_update_pub_(gf_msg);
 };
@@ -727,6 +728,7 @@ void WMBroadcaster::removeGeofence(std::shared_ptr<Geofence> gf_ptr)
   auto send_data = std::make_shared<carma_wm::TrafficControl>(carma_wm::TrafficControl(gf_ptr->id_, gf_ptr->update_list_, gf_ptr->remove_list_));
   
   carma_wm::toBinMsg(send_data, &gf_msg_revert);
+  map_changed_since_last_update_ = true;
   gf_msg_revert.map_version = current_map_version_;
   map_update_pub_(gf_msg_revert);
 
@@ -1039,6 +1041,12 @@ void WMBroadcaster::newMapSubscriber(const ros::SingleSubscriberPublisher& singl
   }
   autoware_lanelet2_msgs::MapBin map_msg;
   lanelet::utils::conversion::toBinMsg(current_map_, &map_msg);
+  if (map_changed_since_last_update_)
+  {
+    map_changed_since_last_update_ = false;
+    current_map_version_++;
+  }
+    
   map_msg.map_version = current_map_version_;
   single_sub_pub.publish(map_msg); // Publish the most updated version of the map to the new subscriber so any future updates are synchronized
 }

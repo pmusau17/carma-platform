@@ -239,6 +239,7 @@ private:
   GeofenceScheduler scheduler_;
   std::string base_map_georef_;
   double max_lane_width_;
+  bool map_changed_since_last_update_ = false;
   /* Version ID of the current_map_ variable. Monotonically increasing value
    * NOTE: This parameter needs to be incremented any time a new map is ready to be published. 
    * It should not be incremented for updates that do not require a full map publication.
