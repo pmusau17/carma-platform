@@ -205,7 +205,7 @@ public:
    * 
    *  \param single_sub_pub A publisher which will publish exclusively to the new subscriber 
    */ 
-  void newMapSubscriber(const ros::SingleSubscriberPublisher& single_sub_pub) const;
+  void newMapSubscriber(const ros::SingleSubscriberPublisher& single_sub_pub);
 
   /*!
    * \brief Returns the most recently recieved route message.

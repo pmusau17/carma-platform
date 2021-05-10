@@ -1035,7 +1035,7 @@ lanelet::BasicPoint2d curr_pos;
 
 }
 
-void WMBroadcaster::newMapSubscriber(const ros::SingleSubscriberPublisher& single_sub_pub) const {
+void WMBroadcaster::newMapSubscriber(const ros::SingleSubscriberPublisher& single_sub_pub) {
   if (!current_map_) {
     return;
   }
